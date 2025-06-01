@@ -1,0 +1,147 @@
+import { Meta, ColorPalette, ColorItem } from '@storybook/blocks';
+import { Button } from '../src/components/atoms/Button/Button';
+import { Input } from '../src/components/atoms/Input/Input';
+import { Card } from '../src/components/molecules/Card/Card';
+import { SearchBar } from '../src/components/molecules/SearchBar/SearchBar';
+
+<Meta title="Introducción" />
+
+# Design System POC
+
+Bienvenido a nuestro Design System. Este es un sistema de diseño moderno construido con React, TypeScript y Vite, siguiendo los principios de Atomic Design.
+
+## 🎨 Paleta de Colores
+
+<ColorPalette>
+  <ColorItem
+    title="Primary"
+    colors={{
+      Primary: '#3B82F6',
+      Light: '#60A5FA',
+      Dark: '#2563EB',
+    }}
+  />
+  <ColorItem
+    title="Secondary"
+    colors={{
+      Secondary: '#10B981',
+      Light: '#34D399',
+      Dark: '#059669',
+    }}
+  />
+  <ColorItem
+    title="Neutral"
+    colors={{
+      Gray: '#6B7280',
+      Light: '#9CA3AF',
+      Dark: '#4B5563',
+    }}
+  />
+</ColorPalette>
+
+## 🧩 Componentes
+
+### Átomos
+
+Los componentes más básicos y reutilizables.
+
+#### Button
+
+```jsx
+<Button variant="primary">Botón Primario</Button>
+<Button variant="secondary">Botón Secundario</Button>
+<Button variant="outline">Botón Outline</Button>
+<Button variant="ghost">Botón Ghost</Button>
+```
+
+#### Input
+
+```jsx
+<Input placeholder="Escribe algo..." />
+<Input placeholder="Con error" error="Campo requerido" />
+<Input placeholder="Deshabilitado" disabled />
+```
+
+### Moléculas
+
+Componentes compuestos por átomos.
+
+#### Card
+
+```jsx
+<Card
+  title="Producto Ejemplo"
+  description="Descripción del producto"
+  price={99.99}
+  category="Electrónicos"
+/>
+```
+
+#### SearchBar
+
+```jsx
+<SearchBar placeholder="Buscar productos..." onSearch={value => console.log('Búsqueda:', value)} />
+```
+
+## 📱 Responsive Design
+
+Nuestro sistema es completamente responsive, adaptándose a diferentes tamaños de pantalla:
+
+- **Mobile**: < 640px
+- **Tablet**: 640px - 1024px
+- **Desktop**: > 1024px
+
+## ♿ Accesibilidad
+
+Todos los componentes siguen las mejores prácticas de accesibilidad:
+
+- Roles ARIA
+- Navegación por teclado
+- Contraste de colores
+- Etiquetas descriptivas
+
+## 🚀 Performance
+
+Optimizaciones implementadas:
+
+- Lazy loading de imágenes
+- Code splitting
+- Optimización de bundles
+- Caché eficiente
+
+## 🧪 Testing
+
+Cada componente incluye:
+
+- Tests unitarios
+- Tests de integración
+- Tests de accesibilidad
+- Visual regression testing
+
+## 📚 Documentación
+
+Documentación detallada disponible en:
+
+- [Guía de Colores](./docs/COLORS.md)
+- [Guía de Tipografía](./docs/TYPOGRAPHY.md)
+- [Guía de Espaciado](./docs/SPACING.md)
+- [Convenciones de Código](./docs/CODE_CONVENTIONS.md)
+- [Patrones de Componentes](./docs/COMPONENT_PATTERNS.md)
+- [Guía de Accesibilidad](./docs/ACCESSIBILITY.md)
+
+## 🛠 Instalación
+
+```bash
+# Instalar dependencias
+npm install
+
+# Iniciar Storybook
+npm run storybook
+
+# Iniciar desarrollo
+npm run dev
+```
+
+## 🤝 Contribución
+
+¡Las contribuciones son bienvenidas! Por favor, revisa nuestra guía de contribución para más detalles.
