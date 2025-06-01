@@ -1,5 +1,7 @@
 import React from 'react';
 import type { ButtonProps } from '../../../types/common';
+import { Icon } from '../Icon/Icon';
+import { getIconSetFromName } from '../../../utils/iconUtils';
 
 export const Button: React.FC<ButtonProps> = ({
   children,
@@ -35,6 +37,19 @@ export const Button: React.FC<ButtonProps> = ({
   const widthStyles = fullWidth ? 'w-full' : '';
   const disabledStyles = disabled || isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer';
 
+  const renderIcon = (icon: string | React.ReactNode) => {
+    if (typeof icon === 'string') {
+      return (
+        <Icon
+          name={icon}
+          set={getIconSetFromName(icon)}
+          size={size === 'sm' ? 16 : size === 'lg' ? 24 : 20}
+        />
+      );
+    }
+    return icon;
+  };
+
   return (
     <button
       className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${widthStyles} ${disabledStyles} ${className}`}
@@ -67,9 +82,13 @@ export const Button: React.FC<ButtonProps> = ({
             />
           </svg>
         )}
-        {!isLoading && leftIcon && <span>{leftIcon}</span>}
+        {!isLoading && leftIcon && (
+          <span className="flex items-center">{renderIcon(leftIcon)}</span>
+        )}
         <span>{children}</span>
-        {!isLoading && rightIcon && <span>{rightIcon}</span>}
+        {!isLoading && rightIcon && (
+          <span className="flex items-center">{renderIcon(rightIcon)}</span>
+        )}
       </div>
     </button>
   );

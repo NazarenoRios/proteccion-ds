@@ -40,6 +40,14 @@ const meta: Meta<typeof Button> = {
       options: ['button', 'submit', 'reset'],
       description: 'Tipo de botón HTML',
     },
+    leftIcon: {
+      control: 'text',
+      description: 'Nombre del icono a mostrar a la izquierda (ej: HiHome, MdHome, FaHome, etc.)',
+    },
+    rightIcon: {
+      control: 'text',
+      description: 'Nombre del icono a mostrar a la derecha (ej: HiHome, MdHome, FaHome, etc.)',
+    },
   },
 };
 
@@ -109,11 +117,27 @@ export const FullWidth: Story = {
   },
 };
 
-export const WithIcons: Story = {
+export const WithHeroicons: Story = {
   args: {
     children: 'Botón',
-    leftIcon: '←',
-    rightIcon: '→',
+    leftIcon: 'HiHome',
+    rightIcon: 'HiChevronRight',
+  },
+};
+
+export const WithMaterialIcons: Story = {
+  args: {
+    children: 'Botón',
+    leftIcon: 'MdHome',
+    rightIcon: 'MdChevronRight',
+  },
+};
+
+export const WithFontAwesome: Story = {
+  args: {
+    children: 'Botón',
+    leftIcon: 'FaHome',
+    rightIcon: 'FaChevronRight',
   },
 };
 
