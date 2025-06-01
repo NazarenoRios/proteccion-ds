@@ -1,16 +1,15 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { Icon } from '../Icon';
+import { Icon } from './Icon';
 
 describe('Icon', () => {
-  it('renders with default props', () => {
+  it('debería renderizar con las props por defecto', () => {
     render(<Icon name="FaHome" />);
     const icon = screen.getByTestId('icon');
     expect(icon).toBeInTheDocument();
-    expect(icon).toHaveClass('text-current'); // default color
+    expect(icon).toHaveClass('text-current'); // color por defecto
   });
 
-  it('renders with different icon sets', () => {
+  it('debería renderizar con diferentes conjuntos de iconos', () => {
     const { rerender } = render(<Icon name="HiHome" set="hi" />);
     expect(screen.getByTestId('icon')).toBeInTheDocument();
 
@@ -21,7 +20,7 @@ describe('Icon', () => {
     expect(screen.getByTestId('icon')).toBeInTheDocument();
   });
 
-  it('renders with different sizes', () => {
+  it('debería renderizar con diferentes tamaños', () => {
     const { rerender } = render(<Icon name="FaHome" size={16} />);
     expect(screen.getByTestId('icon')).toHaveStyle({ width: '16px', height: '16px' });
 
@@ -32,32 +31,32 @@ describe('Icon', () => {
     expect(screen.getByTestId('icon')).toHaveStyle({ width: '32px', height: '32px' });
   });
 
-  it('renders with custom color', () => {
+  it('debería renderizar con color personalizado', () => {
     render(<Icon name="FaHome" color="red" />);
     expect(screen.getByTestId('icon')).toHaveClass('text-red-500');
   });
 
-  it('applies custom className', () => {
-    render(<Icon name="FaHome" className="custom-class" />);
-    expect(screen.getByTestId('icon')).toHaveClass('custom-class');
+  it('debería aplicar className personalizado', () => {
+    render(<Icon name="FaHome" className="clase-personalizada" />);
+    expect(screen.getByTestId('icon')).toHaveClass('clase-personalizada');
   });
 
-  it('handles invalid icon names gracefully', () => {
+  it('debería manejar nombres de iconos inválidos de forma elegante', () => {
     const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-    render(<Icon name="InvalidIcon" />);
+    render(<Icon name="IconoInvalido" />);
     expect(consoleSpy).toHaveBeenCalled();
     consoleSpy.mockRestore();
   });
 
-  it('renders with aria-hidden by default', () => {
+  it('debería renderizar con aria-hidden por defecto', () => {
     render(<Icon name="FaHome" />);
     expect(screen.getByTestId('icon')).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it('renders with aria-label when provided', () => {
-    render(<Icon name="FaHome" ariaLabel="Home icon" />);
+  it('debería renderizar con aria-label cuando se proporciona', () => {
+    render(<Icon name="FaHome" ariaLabel="Icono de inicio" />);
     const icon = screen.getByTestId('icon');
-    expect(icon).toHaveAttribute('aria-label', 'Home icon');
+    expect(icon).toHaveAttribute('aria-label', 'Icono de inicio');
     expect(icon).not.toHaveAttribute('aria-hidden');
   });
 });

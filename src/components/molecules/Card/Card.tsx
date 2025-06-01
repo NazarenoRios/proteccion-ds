@@ -17,9 +17,9 @@ export const Card: React.FC<CardProps> = ({
   ariaLabel,
 }) => {
   return (
-    <div className="flex justify-center items-center p-4">
+    <div className={`flex justify-center items-center p-4 ${className}`}>
       <div
-        className={`bg-white rounded-lg shadow-md overflow-hidden transition-shadow hover:shadow-lg w-full max-w-sm ${className}`}
+        className="bg-white rounded-lg shadow-md overflow-hidden transition-shadow hover:shadow-lg w-full max-w-sm"
         onClick={onClick}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}

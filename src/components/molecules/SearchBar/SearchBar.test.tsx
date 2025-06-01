@@ -1,12 +1,11 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { SearchBar } from '../SearchBar';
+import { SearchBar } from './SearchBar';
 
 describe('SearchBar', () => {
   it('renderiza con props por defecto', () => {
     render(<SearchBar />);
     expect(screen.getByPlaceholderText('Search...')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /search/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Search button' })).toBeInTheDocument();
   });
 
   it('renderiza con placeholder personalizado', () => {
@@ -26,7 +25,7 @@ describe('SearchBar', () => {
     render(<SearchBar onSearch={handleSearch} />);
     const input = screen.getByPlaceholderText('Search...');
     fireEvent.change(input, { target: { value: 'test search' } });
-    fireEvent.click(screen.getByRole('button', { name: /search/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'Search button' }));
     expect(handleSearch).toHaveBeenCalledWith('test search');
   });
 
@@ -43,7 +42,7 @@ describe('SearchBar', () => {
     render(<SearchBar />);
     const input = screen.getByPlaceholderText('Search...');
     fireEvent.change(input, { target: { value: 'test search' } });
-    expect(screen.getByRole('button', { name: /clear/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Clear search' })).toBeInTheDocument();
   });
 
   it('limpia el input y llama a onClear cuando se hace clic en el botón de limpiar', () => {
@@ -51,7 +50,7 @@ describe('SearchBar', () => {
     render(<SearchBar onClear={handleClear} />);
     const input = screen.getByPlaceholderText('Search...');
     fireEvent.change(input, { target: { value: 'test search' } });
-    fireEvent.click(screen.getByRole('button', { name: /clear/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'Clear search' }));
     expect(input).toHaveValue('');
     expect(handleClear).toHaveBeenCalled();
   });

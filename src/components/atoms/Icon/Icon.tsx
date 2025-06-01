@@ -61,6 +61,7 @@ export interface IconProps {
   size?: number;
   color?: string;
   className?: string;
+  ariaLabel?: string;
 }
 
 const iconSets = {
@@ -98,6 +99,7 @@ export const Icon: React.FC<IconProps> = ({
   size = 24,
   color,
   className = '',
+  ariaLabel,
 }) => {
   const IconSet = iconSets[set];
   const IconComponent = IconSet[name as keyof typeof IconSet] as IconType;
@@ -107,5 +109,24 @@ export const Icon: React.FC<IconProps> = ({
     return null;
   }
 
-  return <IconComponent size={size} color={color} className={className} />;
+  const colorClass = color ? `text-${color}-500` : 'text-current';
+  const style = {
+    width: `${size}px`,
+    height: `${size}px`,
+  };
+
+  const props: Record<string, any> = {
+    size,
+    style,
+    className: `${colorClass} ${className}`,
+    'data-testid': 'icon',
+  };
+
+  if (ariaLabel) {
+    props['aria-label'] = ariaLabel;
+  } else {
+    props['aria-hidden'] = 'true';
+  }
+
+  return <IconComponent {...props} />;
 };

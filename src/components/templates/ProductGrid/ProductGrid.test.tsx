@@ -1,46 +1,45 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ProductGrid } from '../ProductGrid';
+import { ProductGrid } from './ProductGrid';
 
 const mockProducts = [
   {
     id: 1,
-    title: 'Product 1',
-    description: 'Description 1',
-    imageUrl: 'image1.jpg',
+    title: 'Producto 1',
+    description: 'Descripción 1',
+    imageUrl: 'imagen1.jpg',
     price: 99.99,
-    category: 'Category 1',
+    category: 'Categoría 1',
   },
   {
     id: 2,
-    title: 'Product 2',
-    description: 'Description 2',
-    imageUrl: 'image2.jpg',
+    title: 'Producto 2',
+    description: 'Descripción 2',
+    imageUrl: 'imagen2.jpg',
     price: 149.99,
-    category: 'Category 2',
+    category: 'Categoría 2',
   },
 ];
 
 describe('ProductGrid', () => {
-  it('renders with required props', () => {
+  it('debería renderizar con las props requeridas', () => {
     render(<ProductGrid products={mockProducts} />);
-    expect(screen.getByText('Product 1')).toBeInTheDocument();
-    expect(screen.getByText('Product 2')).toBeInTheDocument();
+    expect(screen.getByText('Producto 1')).toBeInTheDocument();
+    expect(screen.getByText('Producto 2')).toBeInTheDocument();
   });
 
-  it('renders with title and description', () => {
+  it('debería renderizar con título y descripción', () => {
     render(
       <ProductGrid
         products={mockProducts}
-        title="Featured Products"
-        description="Check out our featured products"
+        title="Productos Destacados"
+        description="Descubre nuestros productos destacados"
       />
     );
-    expect(screen.getByText('Featured Products')).toBeInTheDocument();
-    expect(screen.getByText('Check out our featured products')).toBeInTheDocument();
+    expect(screen.getByText('Productos Destacados')).toBeInTheDocument();
+    expect(screen.getByText('Descubre nuestros productos destacados')).toBeInTheDocument();
   });
 
-  it('renders load more button when onLoadMore is provided', () => {
+  it('debería renderizar el botón de cargar más cuando se proporciona onLoadMore', () => {
     const handleLoadMore = jest.fn();
     render(<ProductGrid products={mockProducts} onLoadMore={handleLoadMore} />);
     const loadMoreButton = screen.getByRole('button', { name: /cargar más productos/i });
@@ -49,22 +48,22 @@ describe('ProductGrid', () => {
     expect(handleLoadMore).toHaveBeenCalledTimes(1);
   });
 
-  it('shows loading state in load more button', () => {
+  it('debería mostrar el estado de carga en el botón de cargar más', () => {
     render(<ProductGrid products={mockProducts} onLoadMore={() => {}} isLoading={true} />);
     expect(screen.getByRole('button', { name: /cargando/i })).toBeInTheDocument();
   });
 
-  it('does not render load more button when onLoadMore is not provided', () => {
+  it('no debería renderizar el botón de cargar más cuando no se proporciona onLoadMore', () => {
     render(<ProductGrid products={mockProducts} />);
     expect(screen.queryByRole('button', { name: /cargar más productos/i })).not.toBeInTheDocument();
   });
 
-  it('applies custom className', () => {
-    render(<ProductGrid products={mockProducts} className="custom-class" />);
-    expect(screen.getByText('Product 1').closest('.custom-class')).toBeInTheDocument();
+  it('debería aplicar className personalizado', () => {
+    render(<ProductGrid products={mockProducts} className="clase-personalizada" />);
+    expect(screen.getByText('Producto 1').closest('.clase-personalizada')).toBeInTheDocument();
   });
 
-  it('renders all products with correct data', () => {
+  it('debería renderizar todos los productos con los datos correctos', () => {
     render(<ProductGrid products={mockProducts} />);
     mockProducts.forEach(product => {
       expect(screen.getByText(product.title)).toBeInTheDocument();
@@ -74,9 +73,9 @@ describe('ProductGrid', () => {
     });
   });
 
-  it('renders with centered layout', () => {
+  it('debería renderizar con diseño centrado', () => {
     render(<ProductGrid products={mockProducts} />);
-    const container = screen.getByText('Product 1').closest('.max-w-7xl');
+    const container = screen.getByText('Producto 1').closest('.max-w-7xl');
     expect(container).toHaveClass('mx-auto');
   });
 });

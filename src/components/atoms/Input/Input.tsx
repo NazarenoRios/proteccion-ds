@@ -25,8 +25,11 @@ export const Input: React.FC<InputProps> = ({
   className = '',
   disabled,
   ariaLabel,
+  id,
   ...props
 }) => {
+  const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
+
   const baseStyles =
     'rounded-md border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
 
@@ -50,7 +53,7 @@ export const Input: React.FC<InputProps> = ({
   return (
     <div className={`flex flex-col gap-1 ${fullWidth ? 'w-full' : ''}`}>
       {label && (
-        <label className="text-sm font-medium text-gray-700" htmlFor={props.id}>
+        <label className="text-sm font-medium text-gray-700" htmlFor={inputId}>
           {label}
         </label>
       )}
@@ -61,6 +64,7 @@ export const Input: React.FC<InputProps> = ({
           </div>
         )}
         <input
+          id={inputId}
           className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${widthStyles} ${disabledStyles} ${errorStyles} ${
             leftIcon ? 'pl-10' : ''
           } ${rightIcon ? 'pr-10' : ''} ${className}`}

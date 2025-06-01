@@ -1,35 +1,34 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { CardGrid } from '../CardGrid';
+import { CardGrid } from './CardGrid';
 
 const mockCards = [
   {
     id: 1,
-    title: 'Product 1',
-    description: 'Description 1',
-    imageUrl: 'image1.jpg',
+    title: 'Producto 1',
+    description: 'Descripción 1',
+    imageUrl: 'imagen1.jpg',
     price: 99.99,
-    category: 'Category 1',
+    category: 'Categoría 1',
   },
   {
     id: 2,
-    title: 'Product 2',
-    description: 'Description 2',
-    imageUrl: 'image2.jpg',
+    title: 'Producto 2',
+    description: 'Descripción 2',
+    imageUrl: 'imagen2.jpg',
     price: 149.99,
-    category: 'Category 2',
+    category: 'Categoría 2',
   },
 ];
 
 describe('CardGrid', () => {
-  it('renders with default props', () => {
+  it('debería renderizar con las props por defecto', () => {
     render(<CardGrid cards={mockCards} />);
     expect(screen.getByRole('grid')).toBeInTheDocument();
-    expect(screen.getByText('Product 1')).toBeInTheDocument();
-    expect(screen.getByText('Product 2')).toBeInTheDocument();
+    expect(screen.getByText('Producto 1')).toBeInTheDocument();
+    expect(screen.getByText('Producto 2')).toBeInTheDocument();
   });
 
-  it('renders with different column configurations', () => {
+  it('debería renderizar con diferentes configuraciones de columnas', () => {
     const { rerender } = render(<CardGrid cards={mockCards} columns={1} />);
     expect(screen.getByRole('grid')).toHaveClass('grid-cols-1');
 
@@ -43,7 +42,7 @@ describe('CardGrid', () => {
     expect(screen.getByRole('grid')).toHaveClass('lg:grid-cols-4');
   });
 
-  it('renders with different gap sizes', () => {
+  it('debería renderizar con diferentes tamaños de espacio', () => {
     const { rerender } = render(<CardGrid cards={mockCards} gap="sm" />);
     expect(screen.getByRole('grid')).toHaveClass('gap-4');
 
@@ -54,7 +53,7 @@ describe('CardGrid', () => {
     expect(screen.getByRole('grid')).toHaveClass('gap-8');
   });
 
-  it('handles click events', () => {
+  it('debería manejar eventos de clic', () => {
     const handleClick = jest.fn();
     render(<CardGrid cards={mockCards} onClick={handleClick} />);
     const cards = screen.getAllByRole('article');
@@ -64,7 +63,7 @@ describe('CardGrid', () => {
     expect(handleClick).toHaveBeenCalledWith(1);
   });
 
-  it('handles mouse events', () => {
+  it('debería manejar eventos del mouse', () => {
     const handleMouseEnter = jest.fn();
     const handleMouseLeave = jest.fn();
     render(
@@ -77,17 +76,17 @@ describe('CardGrid', () => {
     expect(handleMouseLeave).toHaveBeenCalledWith(0);
   });
 
-  it('applies custom className', () => {
-    render(<CardGrid cards={mockCards} className="custom-class" />);
-    expect(screen.getByRole('grid')).toHaveClass('custom-class');
+  it('debería aplicar className personalizado', () => {
+    render(<CardGrid cards={mockCards} className="clase-personalizada" />);
+    expect(screen.getByRole('grid')).toHaveClass('clase-personalizada');
   });
 
-  it('renders with aria-label', () => {
-    render(<CardGrid cards={mockCards} ariaLabel="Product grid" />);
-    expect(screen.getByRole('grid')).toHaveAttribute('aria-label', 'Product grid');
+  it('debería renderizar con aria-label', () => {
+    render(<CardGrid cards={mockCards} ariaLabel="Cuadrícula de productos" />);
+    expect(screen.getByRole('grid')).toHaveAttribute('aria-label', 'Cuadrícula de productos');
   });
 
-  it('renders all cards with correct props', () => {
+  it('debería renderizar todas las tarjetas con las props correctas', () => {
     render(<CardGrid cards={mockCards} />);
     mockCards.forEach(card => {
       expect(screen.getByText(card.title)).toBeInTheDocument();

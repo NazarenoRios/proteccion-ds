@@ -1,6 +1,5 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { Card } from '../Card';
+import { Card } from './Card';
 
 const mockCardProps = {
   id: 1,
