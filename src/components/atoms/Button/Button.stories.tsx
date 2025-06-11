@@ -141,6 +141,28 @@ export const WithFontAwesome: Story = {
   },
 };
 
+export const WithPlusIcon: Story = {
+  args: {
+    children: 'Agregar',
+    leftIcon: 'HiPlus',
+  },
+};
+
+export const WithPlusIconRight: Story = {
+  args: {
+    children: 'Agregar',
+    rightIcon: 'HiPlus',
+  },
+};
+
+export const WithPlusIconBoth: Story = {
+  args: {
+    children: 'Agregar',
+    leftIcon: 'HiPlus',
+    rightIcon: 'HiPlus',
+  },
+};
+
 export const WithEvents: Story = {
   args: {
     children: 'Haz click',
