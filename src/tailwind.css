@@ -1,1 +1,42 @@
 @import 'tailwindcss';
+
+@theme {
+  /* Primary Colors - Azul Protección */
+  --color-primary-100: #eef2f7;
+  --color-primary-200: #b6c5df;
+  --color-primary-300: #7b97c8;
+  --color-primary-400: #3f66b3;
+  --color-primary-500: #0033a0;
+  --color-primary-600: #0b2987;
+  --color-primary-700: #13236f;
+  --color-primary-800: #1a205a;
+  --color-primary-900: #1e1f47;
+
+  /* Primary - Amarillo Protección */
+  --color-primary-yellow-100: #fffebf;
+  --color-primary-yellow-200: #fffd93;
+  --color-primary-yellow-300: #fefa6c;
+  --color-primary-yellow-400: #f5f548;
+  --color-primary-yellow-500: #e3e829;
+  --color-primary-yellow-600: #dfde1f;
+  --color-primary-yellow-700: #d4ce17;
+  --color-primary-yellow-800: #c9bd0f;
+  --color-primary-yellow-900: #b8ac08;
+
+  /* Primary - Aqua Protección */
+  --color-primary-aqua-100: #b8f5f6;
+  --color-primary-aqua-200: #8ae9ee;
+  --color-primary-aqua-300: #5cd9e3;
+  --color-primary-aqua-400: #2ec5d6;
+  --color-primary-aqua-500: #00aec7;
+  --color-primary-aqua-600: #00a6b9;
+  --color-primary-aqua-700: #009ca8;
+  --color-primary-aqua-800: #009097;
+  --color-primary-aqua-900: #008283;
+
+  /* Secondary Colors */
+  --color-info-500: #41b6e6;
+  --color-success-500: #97d700;
+  --color-warning-500: #f1be48;
+  --color-danger-500: #f9423a;
+}

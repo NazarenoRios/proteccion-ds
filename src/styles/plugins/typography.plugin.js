@@ -111,18 +111,21 @@ export default plugin(({ addComponents, theme }) => {
       fontWeight: '400',
       fontSize: '1.5rem', // 15pt
       lineHeight: '22pt',
+      textDecoration: 'underline',
     },
     '.typography-button-link-reduced': {
       fontFamily: theme('fontFamily.primary'),
       fontWeight: '400',
       fontSize: '1.5rem', // 13pt
       lineHeight: '19pt',
+      textDecoration: 'underline',
     },
     '.typography-button-link-breadcrumb': {
       fontFamily: theme('fontFamily.primary'),
       fontWeight: '400',
       fontSize: '1.5rem', // 11pt
       lineHeight: '16pt',
+      textDecoration: 'underline',
     },
     '.typography-button-action': {
       fontFamily: theme('fontFamily.primary'),

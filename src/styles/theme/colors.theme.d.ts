@@ -3,6 +3,7 @@ export interface ColorScale {
   200: string;
   300: string;
   400: string;
+  500: string;
   600: string;
   700: string;
   800: string;
@@ -16,27 +17,22 @@ export interface AlertColor {
 
 export interface ColorPalette {
   primary: {
-    blue: string;
-    yellow: string;
-    aqua: string;
-    blueScale: ColorScale;
-    yellowScale: ColorScale;
-    aquaScale: ColorScale;
+    azulProteccion: ColorScale;
+    amarilloProteccion: ColorScale;
+    aquaProteccion: ColorScale;
   };
-  background: {
-    screen: string;
-    overlayBlack: string;
-    overlayWhite: string;
+  secondary: {
+    informacion: ColorScale;
+    exito: ColorScale;
+    advertencia: ColorScale;
+    peligro: ColorScale;
   };
-  alert: {
-    info: AlertColor;
-    success: AlertColor;
-    warning: AlertColor;
-    error: AlertColor;
-  };
-  neutral: {
-    base: string;
-    scale: ColorScale;
+  basic: {
+    negro: string;
+    blanco: string;
+    overlayNegro: string;
+    overlayBlanco: string;
+    neutral: ColorScale;
   };
 }
 

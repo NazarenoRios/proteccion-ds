@@ -1,184 +1,203 @@
+// Este archivo ahora utiliza los tokens generados por Style Dictionary
+// Las variables CSS están definidas en dist/css/variables.css e importadas en tailwind.css
+
 export const typography = {
   fontFamily: {
-    primary: 'Sura, sans-serif',
+    primary: 'var(--typography-fontFamily-suraSans-value)',
   },
   fontWeight: {
-    regular: 400,
-    bold: 700,
+    regular: 'var(--typography-fontWeight-regular-value)',
+    bold: 'var(--typography-fontWeight-negrita-value)',
+    semibold: 'var(--typography-fontWeight-seminegrita-value)',
   },
   heading: {
     h1: {
       regular: {
-        fontSize: '2.125rem', // 34pt
-        lineHeight: '38pt',
-        fontWeight: 400,
+        fontSize: 'var(--typography-fontSize-xxxl-value)',
+        lineHeight: 'var(--typography-lineHeight-xxxl-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
       },
       bold: {
-        fontSize: '2.125rem', // 34pt
-        lineHeight: '38pt',
-        fontWeight: 700,
+        fontSize: 'var(--typography-fontSize-xxxl-value)',
+        lineHeight: 'var(--typography-lineHeight-xxxl-value)',
+        fontWeight: 'var(--typography-fontWeight-negrita-value)',
       },
     },
     h2: {
       regular: {
-        fontSize: '2.5rem', // 30pt
-        lineHeight: '34pt',
-        fontWeight: 400,
+        fontSize: 'var(--typography-fontSize-xxl-value)',
+        lineHeight: 'var(--typography-lineHeight-xxl-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
       },
       bold: {
-        fontSize: '2.5rem', // 30pt
-        lineHeight: '34pt',
-        fontWeight: 700,
+        fontSize: 'var(--typography-fontSize-xxl-value)',
+        lineHeight: 'var(--typography-lineHeight-xxl-value)',
+        fontWeight: 'var(--typography-fontWeight-negrita-value)',
       },
     },
     h3: {
       regular: {
-        fontSize: '2.166rem', // 26pt
-        lineHeight: '29pt',
-        fontWeight: 400,
+        fontSize: 'var(--typography-fontSize-xl-value)',
+        lineHeight: 'var(--typography-lineHeight-xl-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
       },
       bold: {
-        fontSize: '2.166rem', // 26pt
-        lineHeight: '29pt',
-        fontWeight: 700,
+        fontSize: 'var(--typography-fontSize-xl-value)',
+        lineHeight: 'var(--typography-lineHeight-xl-value)',
+        fontWeight: 'var(--typography-fontWeight-negrita-value)',
       },
     },
     h4: {
       regular: {
-        fontSize: '1.833rem', // 22pt
-        lineHeight: '25pt',
-        fontWeight: 400,
+        fontSize: 'var(--typography-fontSize-l-value)',
+        lineHeight: 'var(--typography-lineHeight-l-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
       },
       bold: {
-        fontSize: '1.833rem', // 22pt
-        lineHeight: '25pt',
-        fontWeight: 700,
+        fontSize: 'var(--typography-fontSize-l-value)',
+        lineHeight: 'var(--typography-lineHeight-l-value)',
+        fontWeight: 'var(--typography-fontWeight-negrita-value)',
       },
     },
     h5: {
       regular: {
-        fontSize: '1.5rem', // 18pt
-        lineHeight: '20pt',
-        fontWeight: 400,
+        fontSize: 'var(--typography-fontSize-m-value)',
+        lineHeight: 'var(--typography-lineHeight-s-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
       },
       bold: {
-        fontSize: '1.5rem', // 18pt
-        lineHeight: '20pt',
-        fontWeight: 700,
+        fontSize: 'var(--typography-fontSize-m-value)',
+        lineHeight: 'var(--typography-lineHeight-s-value)',
+        fontWeight: 'var(--typography-fontWeight-negrita-value)',
       },
     },
     h6: {
       regular: {
-        fontSize: '1.3rem', // 16pt
-        lineHeight: '18pt',
-        fontWeight: 400,
+        fontSize: 'var(--typography-fontSize-s-value)',
+        lineHeight: 'var(--typography-lineHeight-xxs-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
       },
       bold: {
-        fontSize: '1.3rem', // 16pt
-        lineHeight: '18pt',
-        fontWeight: 700,
+        fontSize: 'var(--typography-fontSize-s-value)',
+        lineHeight: 'var(--typography-lineHeight-xxs-value)',
+        fontWeight: 'var(--typography-fontWeight-negrita-value)',
       },
     },
   },
   text: {
     lead: {
       regular: {
-        fontSize: '1.5rem', // 18pt
-        lineHeight: '25pt',
-        fontWeight: 400,
+        fontSize: 'var(--typography-fontSize-m-value)',
+        lineHeight: 'var(--typography-lineHeight-l-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
       },
       bold: {
-        fontSize: '1.5rem', // 18pt
-        lineHeight: '25pt',
-        fontWeight: 700,
+        fontSize: 'var(--typography-fontSize-m-value)',
+        lineHeight: 'var(--typography-lineHeight-m-value)',
+        fontWeight: 'var(--typography-fontWeight-seminegrita-value)',
       },
     },
     paragraph: {
       regular: {
-        fontSize: '1.3rem', // 16pt
-        lineHeight: '18pt',
-        fontWeight: 400,
+        fontSize: 'var(--typography-fontSize-xs-value)',
+        lineHeight: 'var(--typography-lineHeight-s-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
       },
       bold: {
-        fontSize: '1.3rem', // 16pt
-        lineHeight: '18pt',
-        fontWeight: 700,
+        fontSize: 'var(--typography-fontSize-xs-value)',
+        lineHeight: 'var(--typography-lineHeight-m-value)',
+        fontWeight: 'var(--typography-fontWeight-negrita-value)',
       },
     },
     caption: {
       regular: {
-        fontSize: '1.3rem', // 16pt
-        lineHeight: '18pt',
-        fontWeight: 400,
+        fontSize: 'var(--typography-fontSize-xxs-value)',
+        lineHeight: 'var(--typography-lineHeight-xs-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
       },
       bold: {
-        fontSize: '1.3rem', // 16pt
-        lineHeight: '18pt',
-        fontWeight: 700,
+        fontSize: 'var(--typography-fontSize-xxs-value)',
+        lineHeight: 'var(--typography-lineHeight-xs-value)',
+        fontWeight: 'var(--typography-fontWeight-negrita-value)',
       },
     },
     miniCaption: {
       regular: {
-        fontSize: '0.916rem', // 11pt
-        lineHeight: '16pt',
-        fontWeight: 400,
+        fontSize: 'var(--typography-fontSize-xxxs-value)',
+        lineHeight: 'var(--typography-lineHeight-xxxs-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
       },
       bold: {
-        fontSize: '0.916rem', // 11pt
-        lineHeight: '16pt',
-        fontWeight: 700,
+        fontSize: 'var(--typography-fontSize-xxxs-value)',
+        lineHeight: 'var(--typography-lineHeight-xxxs-value)',
+        fontWeight: 'var(--typography-fontWeight-negrita-value)',
       },
     },
     miniCaptionMobile: {
       regular: {
-        fontSize: '0.667rem', // 8pt
-        lineHeight: '16pt',
-        fontWeight: 400,
+        fontSize: 'var(--typography-fontSize-mini-value)',
+        lineHeight: 'var(--typography-lineHeight-xxxs-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
       },
       bold: {
-        fontSize: '0.667rem', // 8pt
-        lineHeight: '16pt',
-        fontWeight: 700,
+        fontSize: 'var(--typography-fontSize-mini-value)',
+        lineHeight: 'var(--typography-lineHeight-xxxs-value)',
+        fontWeight: 'var(--typography-fontWeight-negrita-value)',
       },
     },
   },
   button: {
     link: {
-      fontSize: '1.5rem', // 15pt
-      lineHeight: '22pt',
-      fontWeight: 400,
-    },
-    linkReduced: {
-      fontSize: '1.5rem', // 13pt
-      lineHeight: '19pt',
-      fontWeight: 400,
-    },
-    linkBreadcrumb: {
-      fontSize: '1.5rem', // 11pt
-      lineHeight: '16pt',
-      fontWeight: 400,
+      paragraph: {
+        fontSize: 'var(--typography-fontSize-xs-value)',
+        lineHeight: 'var(--typography-lineHeight-m-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
+        textDecoration: 'underline',
+      },
+      caption: {
+        fontSize: 'var(--typography-fontSize-xxs-value)',
+        lineHeight: 'var(--typography-lineHeight-xs-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
+        textDecoration: 'underline',
+      },
+      breadcrumb: {
+        fontSize: 'var(--typography-fontSize-xxxs-value)',
+        lineHeight: 'var(--typography-lineHeight-xxxs-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
+        textDecoration: 'underline',
+      },
     },
     action: {
-      fontSize: '1.5rem', // 16pt
-      lineHeight: '24pt',
-      fontWeight: 400,
-    },
-    actionReduced: {
-      fontSize: '1.5rem', // 13pt
-      lineHeight: '20pt',
-      fontWeight: 400,
+      regular: {
+        fontSize: 'var(--typography-fontSize-s-value)',
+        lineHeight: 'var(--typography-lineHeight-button-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
+      },
+      small: {
+        fontSize: 'var(--typography-fontSize-xxs-value)',
+        lineHeight: 'var(--typography-lineHeight-s-value)',
+        fontWeight: 'var(--typography-fontWeight-regular-value)',
+      },
     },
   },
   input: {
     placeholder: {
-      fontSize: '1.5rem', // 15pt
-      lineHeight: '22pt',
-      fontWeight: 400,
+      fontSize: 'var(--typography-fontSize-xs-value)',
+      lineHeight: 'var(--typography-lineHeight-s-value)',
+      fontWeight: 'var(--typography-fontWeight-regular-value)',
     },
   },
   tab: {
-    fontSize: '1.5rem', // 13pt
-    lineHeight: '20pt',
-    fontWeight: 400,
+    fontSize: 'var(--typography-fontSize-xxs-value)',
+    lineHeight: 'var(--typography-lineHeight-s-value)',
+    fontWeight: 'var(--typography-fontWeight-negrita-value)',
   },
 };
+
+// Para usar estos estilos de tipografía en componentes, utiliza la sintaxis de Tailwind:
+// font-[var(--typography-fontFamily-suraSans-value)]
+// text-[var(--typography-fontSize-m-value)]
+// leading-[var(--typography-lineHeight-s-value)]
+// etc.
+
+// También puedes crear clases personalizadas en tailwind.config.js para facilitar su uso
