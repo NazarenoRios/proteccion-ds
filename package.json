@@ -1,29 +1,45 @@
 {
-  "name": "poc-design-system",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@proteccionsa/essence-ui",
+  "version": "0.0.1",
+  "private": false,
   "type": "module",
+  "main": "./dist/essence-ui.umd.js",
+  "module": "./dist/essence-ui.es.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "build-info.json"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext .ts,.tsx",
-    "type-check": "tsc --noEmit",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "storybook": "storybook dev -p 6006",
+    "build": "vite build",
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook",
-    "chromatic": "chromatic --project-token=chpt_5516eab4dc6bac4",
-    "chromatic:ci": "chromatic --project-token=chpt_5516eab4dc6bac4 --ci",
+    "chromatic": "node scripts/run-chromatic-and-save.js",
+    "chromatic:ci": "chromatic --project-token=chpt_1481e1a672f4ca1 --ci",
+    "chromatic:manual": "chromatic --project-token=chpt_1481e1a672f4ca1",
     "preview": "vite preview",
     "test:watch": "jest --watch",
     "test:ci": "jest --ci --coverage --maxWorkers=2",
     "test:storybook:ci": "test-storybook --ci",
     "transform-tokens": "node scripts/transform-tokens.js",
     "build-tokens": "node scripts/build-tokens.js",
-    "tokens": "npm run transform-tokens && npm run build-tokens"
-  },
+    "tokens": "npm run transform-tokens && npm run build-tokens",
+    "lint": "eslint . --ext .ts,.tsx",
+    "type-check": "tsc --noEmit -p tsconfig.app.json",
+    "pack": "npm pack",
+    "pack:local": "npm run build && npm pack",
+    "prepare": "npm run build",
+    "chromatic:check": "node scripts/chromatic-build-info.js",
+    "chromatic:check:json": "node scripts/chromatic-build-info.js --json",
+    "chromatic:check:open": "node scripts/chromatic-build-info.js --open",
+    "chromatic:last": "node scripts/chromatic-realtime-status.js",
+    "chromatic:webhook": "node webhook/server.js"
+    },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.11",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.5.0",
@@ -60,6 +76,7 @@
     "@storybook/testing-library": "^0.2.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
+    "@types/node": "^24.3.1",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
@@ -93,7 +110,11 @@
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
     "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.0",
     "vitest": "^3.1.4"
+  },
+  "overrides": {
+    "axios": "^1.13.2"
   },
   "eslintConfig": {
     "extends": [

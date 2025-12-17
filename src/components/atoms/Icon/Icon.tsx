@@ -1,132 +1,68 @@
 import React from 'react';
-import * as FaIcons from 'react-icons/fa';
-import * as HiIcons from 'react-icons/hi';
-import * as MdIcons from 'react-icons/md';
-import * as RiIcons from 'react-icons/ri';
-import * as BiIcons from 'react-icons/bi';
-import * as AiIcons from 'react-icons/ai';
-import * as BsIcons from 'react-icons/bs';
-import * as TbIcons from 'react-icons/tb';
-import * as GiIcons from 'react-icons/gi';
-import * as WiIcons from 'react-icons/wi';
-import * as DiIcons from 'react-icons/di';
-import * as SiIcons from 'react-icons/si';
-import * as ImIcons from 'react-icons/im';
-import * as FiIcons from 'react-icons/fi';
-import * as CgIcons from 'react-icons/cg';
-import * as VscIcons from 'react-icons/vsc';
-import * as GoIcons from 'react-icons/go';
-import * as GrIcons from 'react-icons/gr';
-import * as TiIcons from 'react-icons/ti';
-import * as PiIcons from 'react-icons/pi';
-import * as LuIcons from 'react-icons/lu';
-import * as CiIcons from 'react-icons/ci';
-import * as RxIcons from 'react-icons/rx';
-import * as TfiIcons from 'react-icons/tfi';
-import * as LiaIcons from 'react-icons/lia';
-import * as IoIcons from 'react-icons/io5';
-import type { IconType } from 'react-icons';
+import type { IconName, IconSet } from '../../../utils/iconUtils';
 
-export type IconSet =
-  | 'fa'
-  | 'hi'
-  | 'io'
-  | 'md'
-  | 'ri'
-  | 'bi'
-  | 'ai'
-  | 'bs'
-  | 'tb'
-  | 'gi'
-  | 'wi'
-  | 'di'
-  | 'si'
-  | 'im'
-  | 'fi'
-  | 'cg'
-  | 'vsc'
-  | 'go'
-  | 'gr'
-  | 'ti'
-  | 'pi'
-  | 'lu'
-  | 'ci'
-  | 'rx'
-  | 'tfi'
-  | 'lia';
+// Pre-import all SVG icons as raw text
+const iconModules = import.meta.glob('../../../assets/icons/*.svg', { 
+  as: 'raw',
+  eager: true 
+});
 
 export interface IconProps {
-  name: string;
-  set?: IconSet;
+  name: IconName;
   size?: number;
   color?: string;
   className?: string;
+  set?: IconSet;
+  onClick?: () => void;
   ariaLabel?: string;
 }
 
-const iconSets = {
-  fa: FaIcons,
-  hi: HiIcons,
-  io: IoIcons,
-  md: MdIcons,
-  ri: RiIcons,
-  bi: BiIcons,
-  ai: AiIcons,
-  bs: BsIcons,
-  tb: TbIcons,
-  gi: GiIcons,
-  wi: WiIcons,
-  di: DiIcons,
-  si: SiIcons,
-  im: ImIcons,
-  fi: FiIcons,
-  cg: CgIcons,
-  vsc: VscIcons,
-  go: GoIcons,
-  gr: GrIcons,
-  ti: TiIcons,
-  pi: PiIcons,
-  lu: LuIcons,
-  ci: CiIcons,
-  rx: RxIcons,
-  tfi: TfiIcons,
-  lia: LiaIcons,
-};
-
 export const Icon: React.FC<IconProps> = ({
   name,
-  set = 'fa',
   size = 24,
-  color,
+  color = 'text-gray-600',
   className = '',
+  onClick,
   ariaLabel,
+  ...props
 }) => {
-  const IconSet = iconSets[set];
-  const IconComponent = IconSet[name as keyof typeof IconSet] as IconType;
+  // Get the icon content directly from the pre-imported modules
+  const iconPath = `../../../assets/icons/${name}.svg`;
+  const iconContent = iconModules[iconPath];
 
-  if (!IconComponent) {
-    console.warn(`Icon "${name}" not found in set "${set}"`);
-    return null;
+  if (!iconContent) {
+    return (
+      <div 
+        className={`inline-flex items-center justify-center bg-gray-100 text-gray-400 text-xs rounded ${className}`}
+        style={{ width: size, height: size }}
+        aria-label={`Error al cargar icono: ${name}`}
+        title={`Error al cargar icono: ${name}`}
+      >
+        ?
+      </div>
+    );
   }
 
-  const colorClass = color ? `text-${color}-500` : 'text-current';
-  const style = {
-    width: `${size}px`,
-    height: `${size}px`,
-  };
+  // Process the SVG content
+  let processedSvg = iconContent;
+  
+  // Reemplazar el fill hardcodeado con currentColor para permitir cambio de color con CSS
+  processedSvg = processedSvg.replace(/fill="[^"]*"/g, 'fill="currentColor"');
+  
+  // Ajustar el tamaño del SVG
+  processedSvg = processedSvg.replace(
+    /width="\d+" height="\d+"/,
+    `width="${size}" height="${size}"`
+  );
 
-  const props: Record<string, any> = {
-    size,
-    style,
-    className: `${colorClass} ${className}`,
-    'data-testid': 'icon',
-  };
-
-  if (ariaLabel) {
-    props['aria-label'] = ariaLabel;
-  } else {
-    props['aria-hidden'] = 'true';
-  }
-
-  return <IconComponent {...props} />;
-};
+  return (
+    <span
+      className={`inline-flex items-center justify-center ${color} ${onClick ? 'cursor-pointer' : ''} ${className}`}
+      onClick={onClick}
+      aria-label={ariaLabel || `Icono ${name}`}
+      role={onClick ? 'button' : 'img'}
+      dangerouslySetInnerHTML={{ __html: processedSvg }}
+      {...props}
+    />
+  );
+}; 

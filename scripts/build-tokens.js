@@ -5,9 +5,13 @@
  * a los diferentes formatos de salida definidos en la configuración.
  */
 
-const StyleDictionary = require('style-dictionary');
-const path = require('path');
-const fs = require('fs');
+import StyleDictionary from 'style-dictionary';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Ruta al archivo de configuración
 const configPath = path.resolve(__dirname, '../style-dictionary.config.js');
@@ -26,16 +30,18 @@ if (!fs.existsSync(transformedTokensPath)) {
   process.exit(1);
 }
 
-try {
-  // Importar la configuración
-  const config = require(configPath);
+(async () => {
+  try {
+    // Importar la configuración
+    const config = (await import(configPath)).default;
 
-  // Ejecutar Style Dictionary con la configuración
-  const styleDictionary = StyleDictionary.extend(config);
-  styleDictionary.buildAllPlatforms();
+    // Ejecutar Style Dictionary con la configuración
+    const styleDictionary = StyleDictionary.extend(config);
+    styleDictionary.buildAllPlatforms();
 
-  console.log('✅ Tokens generados correctamente para todas las plataformas');
-} catch (error) {
-  console.error('Error al construir los tokens:', error);
-  process.exit(1);
-}
+    console.log('✅ Tokens generados correctamente para todas las plataformas');
+  } catch (error) {
+    console.error('Error al construir los tokens:', error);
+    process.exit(1);
+  }
+})();

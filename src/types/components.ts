@@ -1,4 +1,5 @@
 import { ButtonVariant, ButtonSize, InputVariant, InputSize } from './common';
+import type { IconName } from '../utils/iconUtils';
 
 // Tipos para componentes
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -54,5 +55,70 @@ export interface CardGridProps {
   onClick?: (index: number) => void;
   onMouseEnter?: (index: number) => void;
   onMouseLeave?: (index: number) => void;
+  ariaLabel?: string;
+}
+
+export interface IconProps {
+  name: IconName;
+  size?: number;
+  color?: string;
+  className?: string;
+  set?: string;
+  onClick?: () => void;
+  ariaLabel?: string;
+}
+
+export interface ModalProps {
+  /**
+   * Indica si el modal está abierto
+   */
+  isOpen: boolean;
+  /**
+   * Función para cerrar el modal
+   */
+  onClose: () => void;
+  /**
+   * Título del modal
+   */
+  title: string;
+  /**
+   * Contenido del modal
+   */
+  children: React.ReactNode;
+  /**
+   * Tipo de modal basado en el diseño
+   */
+  variant?: 'content' | 'prevention' | 'mobile';
+  /**
+   * Texto del botón principal
+   */
+  primaryButtonText?: string;
+  /**
+   * Función del botón principal
+   */
+  onPrimaryAction?: () => void;
+  /**
+   * Texto del botón secundario
+   */
+  secondaryButtonText?: string;
+  /**
+   * Función del botón secundario
+   */
+  onSecondaryAction?: () => void;
+  /**
+   * Icono del modal
+   */
+  icon?: string;
+  /**
+   * Clase CSS adicional
+   */
+  className?: string;
+  /**
+   * Indica si se puede cerrar haciendo clic fuera del modal
+   */
+  closeOnOverlayClick?: boolean;
+  /**
+   * Etiqueta ARIA para accesibilidad
+   */
   ariaLabel?: string;
 }

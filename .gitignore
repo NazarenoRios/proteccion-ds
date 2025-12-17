@@ -41,5 +41,16 @@ coverage
 build
 dist
 out
+build-info.json
 
 *storybook.log
+
+# Figma data and scripts
+scripts/
+!scripts/chromatic-build-info.js
+
+# Claude AI settings
+.claude/
+settings.local.json
+**/.claude/
+**/settings.local.json

@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: essence-ui-webhook
+    env: node
+    buildCommand: npm install
+    startCommand: node webhook/server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production

@@ -1,0 +1,19 @@
+@font-face {
+  font-family: 'Sura Sans Regular';
+  src: url('./assets/fonts/Sura-sans/SuraSans-Regular.otf');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sura Sans Negrita';
+  src: url('./assets/fonts/Sura-sans/SuraSans-Negrita.otf');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Sura Sans Seminegrita';
+  src: url('./assets/fonts/Sura-sans/SuraSans-Seminegrita.otf');
+  font-display: swap;
+}
+
+  

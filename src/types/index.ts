@@ -4,8 +4,8 @@ export * from './components';
 export * from './product';
 
 // Common types
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
-export type ButtonSize = 'sm' | 'md' | 'lg';
+export type ButtonVariant = 'primaryGeneral' | 'primaryInverse' | 'secondaryGeneral' | 'secondaryInverse' | 'tertiaryGeneral' | 'tertiaryInverse';
+export type ButtonSize = 'S' | 'M' | 'L';
 export type InputVariant = 'default' | 'outline' | 'filled';
 export type InputSize = 'sm' | 'md' | 'lg';
 

@@ -5,9 +5,13 @@
  * desde Figma Tokens a un formato compatible con Style Dictionary.
  */
 
-const fs = require('fs');
-const path = require('path');
-const { transformTokens } = require('token-transformer');
+import fs from 'fs';
+import path from 'path';
+import { transformTokens } from 'token-transformer';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Rutas de archivos
 const figmaTokensPath = path.resolve(__dirname, '../tokens/figma/tokens.json');
@@ -51,43 +55,66 @@ try {
     }
   );
 
+
+
   // Reorganizar tokens para Style Dictionary
   const reorganizedTokens = {
     color: {},
     shadow: {},
     typography: {},
-    // Añadir otras categorías según sea necesario
+    font: {
+      family: {},
+      weight: {}
+    },
+    text: {},
+    spacing: {},
+    border: {},
+    radius: {},
+    breakpoint: {},
+    opacity: {}
+  };
+
+    // Copiar sets base a la raíz del objeto reorganizado si existen
+const baseSets = [
+  'fontFamilies', 'fontWeights', 'lineHeights', 'fontSize',
+  'letterSpacing', 'paragraphSpacing', 'paragraphIndent',
+  'textCase', 'textDecoration'
+];
+
+baseSets.forEach(set => {
+  if (figmaTokens[set]) {
+    reorganizedTokens[set] = figmaTokens[set];
+  }
+});
+
+  // Función para normalizar nombres de tokens
+  const normalizeTokenName = (name) => {
+    return name
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]/g, '-')
+      .replace(/--+/g, '-')
+      .replace(/^-+|-+$/g, '');
   };
 
   // Procesar colores
-  if (figmaTokens['Color primario']) {
-    reorganizedTokens.color.primary = {};
-    Object.entries(figmaTokens['Color primario']).forEach(([key, value]) => {
+  const processColorTokens = (prefix, source) => {
+    if (!source) return;
+    
+    reorganizedTokens.color[prefix] = {};
+    Object.entries(source).forEach(([key, value]) => {
       if (typeof value === 'object' && !Array.isArray(value)) {
-        reorganizedTokens.color.primary[key.toLowerCase().replace(' ', '-')] = value;
+        const normalizedKey = normalizeTokenName(key);
+        reorganizedTokens.color[prefix][normalizedKey] = value;
       }
     });
-  }
+  };
 
-  if (figmaTokens['Color secundario']) {
-    reorganizedTokens.color.secondary = {};
-    Object.entries(figmaTokens['Color secundario']).forEach(([key, value]) => {
-      if (typeof value === 'object' && !Array.isArray(value)) {
-        reorganizedTokens.color.secondary[key.toLowerCase().replace(' ', '-')] = value;
-      }
-    });
-  }
-
-  if (figmaTokens['Color básico']) {
-    reorganizedTokens.color.basic = {};
-    Object.entries(figmaTokens['Color básico']).forEach(([key, value]) => {
-      if (typeof value === 'object' && !Array.isArray(value)) {
-        reorganizedTokens.color.basic[key.toLowerCase().replace(' ', '-')] = value;
-      } else {
-        reorganizedTokens.color.basic[key.toLowerCase().replace(' ', '-')] = { value };
-      }
-    });
-  }
+  // Procesar colores principales, secundarios y básicos
+  processColorTokens('primary', figmaTokens['Color primario']);
+  processColorTokens('secondary', figmaTokens['Color secundario']);
+  processColorTokens('basic', figmaTokens['Color básico']);
 
   // Procesar sombras
   const shadowKeys = ['XXS Sombra', 'XS Sombra', 'S Sombra', 'M Sombra', 'L Sombra', 'XL Sombra'];
@@ -104,6 +131,126 @@ try {
       }
     }
   });
+
+  // Procesar fuentes
+  reorganizedTokens.fontFamilies = {
+    'sura-sans-0': { value: 'Sura Sans Regular', type: 'fontFamilies' },
+    'sura-sans-1': { value: 'Sura Sans Negrita', type: 'fontFamilies' },
+    'sura-sans-2': { value: 'Sura Sans Seminegrita', type: 'fontFamilies' },
+    'sura-sans': { value: 'Sura Sans', type: 'fontFamilies' } // Mantener la referencia original para la tipografía
+  };
+  
+  reorganizedTokens.fontWeights = {
+    'sura-sans-0': { value: '400', type: 'fontWeights' },
+    'sura-sans-1': { value: '700', type: 'fontWeights' },
+    'sura-sans-2': { value: '600', type: 'fontWeights' },
+    'sura-sans-regular': { value: '400', type: 'fontWeights' },
+    'sura-sans-negrita': { value: '700', type: 'fontWeights' },
+    'sura-sans-seminegrita': { value: '600', type: 'fontWeights' }
+  };
+
+  // Procesar tipografía
+  if (figmaTokens['typography']) {
+    reorganizedTokens.typography = JSON.parse(JSON.stringify(figmaTokens['typography']));
+    
+    // Actualizar referencias de tipografía para usar las fuentes correctas
+    const updateTypographyRefs = (obj) => {
+      if (typeof obj !== 'object' || obj === null) return;
+      
+      for (const key in obj) {
+        if (key === 'fontFamily' && obj[key] === '{fontFamilies.sura-sans}') {
+          // Usar la fuente regular por defecto
+          obj[key] = '{fontFamilies.sura-sans-0}';
+        } else if (key === 'fontWeight') {
+          if (obj[key] === '{fontWeights.sura-sans-0}') {
+            obj[key] = '{fontWeights.sura-sans-regular}';
+          } else if (obj[key] === '{fontWeights.sura-sans-1}') {
+            obj[key] = '{fontWeights.sura-sans-negrita}';
+          } else if (obj[key] === '{fontWeights.sura-sans-2}') {
+            obj[key] = '{fontWeights.sura-sans-seminegrita}';
+          }
+        } else {
+          updateTypographyRefs(obj[key]);
+        }
+      }
+    };
+    
+    updateTypographyRefs(reorganizedTokens.typography);
+  }
+
+  if (figmaTokens['fontSize']) {
+    reorganizedTokens.text = reorganizedTokens.text || {};
+    Object.entries(figmaTokens['fontSize']).forEach(([key, value]) => {
+      const sizeName = normalizeTokenName(key);
+      reorganizedTokens.text[`size-${sizeName}`] = value;
+    });
+  }
+
+  // Procesar espaciado
+  if (figmaTokens['spacing']) {
+    Object.entries(figmaTokens['spacing']).forEach(([key, value]) => {
+      const spacingName = `spacing-${key}`;
+      reorganizedTokens.spacing[spacingName] = value;
+    });
+  }
+
+  // Procesar bordes
+  if (figmaTokens['borderWidths']) {
+    Object.entries(figmaTokens['borderWidths']).forEach(([key, value]) => {
+      reorganizedTokens.border[`width-${key}`] = value;
+    });
+  }
+
+  // Procesar radios de borde
+  if (figmaTokens['radii']) {
+    Object.entries(figmaTokens['radii']).forEach(([key, value]) => {
+      reorganizedTokens.radius[`radius-${key}`] = value;
+    });
+  }
+
+  // Procesar opacidades
+  if (figmaTokens['opacities']) {
+    Object.entries(figmaTokens['opacities']).forEach(([key, value]) => {
+      reorganizedTokens.opacity[`opacity-${key}`] = value;
+    });
+  }
+
+  // Procesar tipografías de escritorio
+  if (figmaTokens['Desktop']) {
+    reorganizedTokens.typography.desktop = {};
+    
+    // Procesar encabezados
+    if (figmaTokens['Desktop']['Headings']) {
+      reorganizedTokens.typography.desktop.headings = {};
+      
+      Object.entries(figmaTokens['Desktop']['Headings']).forEach(([heading, styles]) => {
+        const headingName = normalizeTokenName(heading);
+        reorganizedTokens.typography.desktop.headings[headingName] = {};
+        
+        Object.entries(styles).forEach(([styleName, styleValue]) => {
+          if (styleValue && styleValue.value) {
+            reorganizedTokens.typography.desktop.headings[headingName][styleName.toLowerCase()] = styleValue.value;
+          }
+        });
+      });
+    }
+    
+    // Procesar cuerpo de texto
+    if (figmaTokens['Desktop']['Body']) {
+      reorganizedTokens.typography.desktop.body = {};
+      
+      Object.entries(figmaTokens['Desktop']['Body']).forEach(([textType, styles]) => {
+        const typeName = normalizeTokenName(textType);
+        reorganizedTokens.typography.desktop.body[typeName] = {};
+        
+        Object.entries(styles).forEach(([styleName, styleValue]) => {
+          if (styleValue && styleValue.value) {
+            reorganizedTokens.typography.desktop.body[typeName][styleName.toLowerCase()] = styleValue.value;
+          }
+        });
+      });
+    }
+  }
 
   // Guardar los tokens transformados
   fs.writeFileSync(

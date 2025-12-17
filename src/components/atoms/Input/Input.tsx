@@ -1,84 +1,258 @@
-import React from 'react';
+import React, { forwardRef, useState } from 'react';
 
-export type InputVariant = 'default' | 'outline' | 'filled';
-export type InputSize = 'sm' | 'md' | 'lg';
-
-export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
-  variant?: InputVariant;
-  size?: InputSize;
+export interface InputProps {
+  /**
+   * Etiqueta del campo de entrada
+   */
   label?: string;
-  error?: string;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
-  fullWidth?: boolean;
-  ariaLabel?: string;
+  /**
+   * Texto de apoyo que brinda orientación adicional
+   */
+  helperText?: string;
+  /**
+   * Mensaje de error
+   */
+  errorMessage?: string;
+  /**
+   * Indica si el input está en estado de error
+   */
+  hasError?: boolean;
+  /**
+   * Variante de estilo
+   * @default 'text'
+   */
+  variant?: 'text' | 'select' | 'textarea';
+  /**
+   * Tamaño del input
+   * @default 'M'
+   */
+  size?: 'S' | 'M' | 'L';
+  /**
+   * Indica si el input está deshabilitado
+   */
+  disabled?: boolean;
+  /**
+   * Placeholder personalizado
+   */
+  placeholder?: string;
+  /**
+   * Clases CSS adicionales
+   */
+  className?: string;
+  /**
+   * Valor del input
+   */
+  value?: string;
+  /**
+   * Callback para cuando cambia el valor
+   */
+  onChange?: (value: string) => void;
+  /**
+   * Callback para el evento focus
+   */
+  onFocus?: () => void;
+  /**
+   * Callback para el evento blur
+   */
+  onBlur?: () => void;
+  /**
+   * ID del input
+   */
+  id?: string;
+  /**
+   * Name del input
+   */
+  name?: string;
+  /**
+   * Opciones para select (solo aplica cuando variant es 'select')
+   */
+  options?: Array<{ value: string; label: string }>;
+  /**
+   * Filas para textarea (solo aplica cuando variant es 'textarea')
+   */
+  rows?: number;
 }
 
-export const Input: React.FC<InputProps> = ({
-  variant = 'default',
-  size = 'md',
+export const Input = forwardRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement, InputProps>(({
   label,
-  error,
-  leftIcon,
-  rightIcon,
-  fullWidth = false,
+  helperText,
+  errorMessage,
+  hasError = false,
+  variant = 'text',
+  size = 'M',
+  disabled = false,
+  placeholder,
   className = '',
-  disabled,
-  ariaLabel,
+  options = [],
+  rows = 4,
   id,
   ...props
-}) => {
+}, ref) => {
+  const [isFocused, setIsFocused] = useState(false);
   const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
 
-  const baseStyles =
-    'rounded-md border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
-
-  const variantStyles = {
-    default: 'border-gray-300 focus:ring-blue-500 focus:border-blue-500',
-    outline: 'border-2 border-blue-600 focus:ring-blue-500',
-    filled:
-      'bg-gray-100 border-transparent focus:ring-blue-500 focus:bg-white focus:border-blue-500',
-  };
-
+  // Estilos base del input
+  const baseInputStyles = 'w-full border transition-all duration-200 outline-none resize-none';
+  
+  // Estilos según el tamaño
   const sizeStyles = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg',
+    S: 'px-3 py-2 text-sm',
+    M: 'px-4 py-3 text-base',
+    L: 'px-4 py-4 text-lg',
   };
 
-  const widthStyles = fullWidth ? 'w-full' : '';
-  const disabledStyles = disabled ? 'opacity-50 cursor-not-allowed bg-gray-50' : 'cursor-text';
-  const errorStyles = error ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : '';
+  // Estilos según el estado
+  const getInputStateStyles = () => {
+    if (disabled) {
+      return 'bg-basic-neutral-100 border-basic-neutral-300 text-basic-neutral-500 cursor-not-allowed';
+    }
+    
+    if (hasError) {
+      return 'bg-white border-secondary-peligro-700 text-basic-neutral-900 focus:border-secondary-peligro-700 focus:ring-2 focus:ring-secondary-peligro-100';
+    }
+    
+    if (isFocused) {
+      return 'bg-white border-primary-azul-proteccion-500 text-basic-neutral-900 ring-2 ring-primary-azul-proteccion-100';
+    }
+    
+    // Estado activo (con contenido) o inactivo (sin contenido)
+    return 'bg-white border-basic-neutral-300 text-basic-neutral-900 hover:border-basic-neutral-400 focus:border-primary-azul-proteccion-500 focus:ring-2 focus:ring-primary-azul-proteccion-100';
+  };
+
+  const inputStyles = `${baseInputStyles} ${sizeStyles[size]} ${getInputStateStyles()} ${className}`;
+
+  // Estilos para la etiqueta
+  const labelStyles = `block text-[15px] font-normal text-basic-neutral-900 mb-1 ${disabled ? 'text-basic-neutral-500' : ''}`;
+  
+  // Estilos para el texto de apoyo
+  const helperTextStyles = `text-[13px] font-normal text-basic-neutral-600 mt-1 ${disabled ? 'text-basic-neutral-400' : ''}`;
+  
+  // Estilos para el mensaje de error
+  const errorMessageStyles = 'text-[13px] font-normal text-secondary-peligro-700 mt-1';
+
+  const handleFocus = (e: React.FocusEvent) => {
+    if (!disabled) {
+      setIsFocused(true);
+      props.onFocus?.();
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent) => {
+    setIsFocused(false);
+    props.onBlur?.();
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    if (!disabled) {
+      props.onChange?.(e.target.value);
+    }
+  };
+
+  const renderInput = () => {
+    switch (variant) {
+      case 'select':
+        return (
+          <select
+            ref={ref as React.Ref<HTMLSelectElement>}
+            id={inputId}
+            name={props.name}
+            value={props.value}
+            disabled={disabled}
+            className={inputStyles}
+            style={{
+              borderRadius: '3px',
+              padding: '8px 12px',
+              fontSize: '15px',
+              lineHeight: '20px'
+            }}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            onChange={handleChange}
+          >
+            {placeholder && (
+              <option value="" disabled>
+                {placeholder}
+              </option>
+            )}
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        );
+      
+      case 'textarea':
+        return (
+          <textarea
+            ref={ref as React.Ref<HTMLTextAreaElement>}
+            id={inputId}
+            name={props.name}
+            value={props.value}
+            disabled={disabled}
+            className={inputStyles}
+            style={{
+              borderRadius: '3px',
+              padding: '8px 12px',
+              fontSize: '15px',
+              lineHeight: '20px'
+            }}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            onChange={handleChange}
+            rows={rows}
+            placeholder={placeholder || 'Placeholder texto de área'}
+          />
+        );
+      
+      default:
+        return (
+          <input
+            ref={ref as React.Ref<HTMLInputElement>}
+            type="text"
+            id={inputId}
+            name={props.name}
+            value={props.value}
+            disabled={disabled}
+            className={inputStyles}
+            style={{
+              borderRadius: '3px',
+              padding: '8px 12px',
+              fontSize: '15px',
+              lineHeight: '20px'
+            }}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            onChange={handleChange}
+            placeholder={placeholder || 'Text'}
+          />
+        );
+    }
+  };
 
   return (
-    <div className={`flex flex-col gap-1 ${fullWidth ? 'w-full' : ''}`}>
+    <div className="w-full">
       {label && (
-        <label className="text-sm font-medium text-gray-700" htmlFor={inputId}>
+        <label htmlFor={inputId} className={labelStyles}>
           {label}
         </label>
       )}
-      <div className="relative">
-        {leftIcon && (
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            {leftIcon}
-          </div>
-        )}
-        <input
-          id={inputId}
-          className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${widthStyles} ${disabledStyles} ${errorStyles} ${
-            leftIcon ? 'pl-10' : ''
-          } ${rightIcon ? 'pr-10' : ''} ${className}`}
-          disabled={disabled}
-          aria-label={ariaLabel}
-          {...props}
-        />
-        {rightIcon && (
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            {rightIcon}
-          </div>
-        )}
-      </div>
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      
+      {renderInput()}
+      
+      {hasError && errorMessage && (
+        <p className={errorMessageStyles}>
+          {errorMessage}
+        </p>
+      )}
+      
+      {!hasError && helperText && (
+        <p className={helperTextStyles}>
+          {helperText}
+        </p>
+      )}
     </div>
   );
-};
+});
+
+Input.displayName = 'Input'; 
