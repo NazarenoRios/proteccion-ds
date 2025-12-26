@@ -1,13 +1,14 @@
 {
-  "buildNumber": 16,
+  "buildNumber": 20,
   "status": "PASSED",
   "result": "SUCCESS",
   "reviewStatus": "PENDING_REVIEW",
-  "webUrl": "https://www.chromatic.com/build?appId=690b6ad8f793d5704c221f28&number=16",
-  "changeCount": 24,
-  "testCount": 135,
-  "componentCount": 16,
-  "storybookUrl": "https://690b6ad8f793d5704c221f28-gytvbxoetr.chromatic.com/",
-  "lastUpdated": "2025-12-05T15:36:08.000Z",
-  "requiresReview": true
+  "webUrl": "https://www.chromatic.com/builds?appId=690b6ad8f793d5704c221f28",
+  "changeCount": 0,
+  "testCount": 0,
+  "componentCount": 0,
+  "storybookUrl": null,
+  "lastUpdated": "2025-12-23T13:11:32.413Z",
+  "requiresReview": true,
+  "source": "cli-realtime"
 }
