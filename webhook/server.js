@@ -71,71 +71,26 @@ function saveBuildInfo(buildInfo) {
 }
 
 /**
- * Consulta el último build usando el CLI de Chromatic en modo dry-run
- * Este método funciona sin necesidad de autenticación OAuth
+ * Lee el último build del archivo JSON local
+ * NOTA: No ejecuta el CLI porque --dry-run crea builds fantasma en Chromatic
+ * Para actualizar los datos, ejecuta: npm run chromatic:check
  */
-async function getLastBuildFromCLI() {
-  return new Promise((resolve) => {
-    console.log('🔍 Consultando Chromatic CLI en tiempo real...');
+function getLastBuildFromCache() {
+  try {
+    if (!existsSync(BUILD_FILE)) {
+      console.log('📭 No hay archivo de build local');
+      return null;
+    }
 
-    import('child_process').then(({ exec }) => {
-      // Ejecutar chromatic con --dry-run para obtener info sin hacer un build real
-      const command = `npx chromatic --project-token=${PROJECT_TOKEN} --dry-run --exit-zero-on-changes`;
+    const data = readFileSync(BUILD_FILE, 'utf-8');
+    const buildInfo = JSON.parse(data);
 
-      exec(command, { timeout: 60000 }, (error, stdout, stderr) => {
-        try {
-          const output = stdout + stderr;
-
-          // Extraer información del output del CLI
-          const buildMatch = output.match(/Build (\d+)/i);
-          const urlMatch = output.match(/(https:\/\/www\.chromatic\.com\/build\?[^\s]+)/);
-          const statusMatch = output.match(/(passed|failed|pending|denied|accepted)/i);
-          const changesMatch = output.match(/(\d+) component/i);
-
-          if (buildMatch) {
-            // Determinar el estado de revisión basado en el output
-            let reviewStatus = 'PENDING_REVIEW';
-            if (output.includes('accepted') || output.includes('no changes')) {
-              reviewStatus = 'ACCEPTED';
-            } else if (output.includes('denied')) {
-              reviewStatus = 'DENIED';
-            }
-
-            const buildInfo = {
-              buildNumber: parseInt(buildMatch[1]),
-              status: statusMatch ? statusMatch[1].toUpperCase() : 'PASSED',
-              result: statusMatch ? statusMatch[1].toUpperCase() : 'SUCCESS',
-              reviewStatus: reviewStatus,
-              webUrl: urlMatch ? urlMatch[1] : `https://www.chromatic.com/builds?appId=${PROJECT_ID}`,
-              changeCount: 0, // El CLI no siempre reporta esto en dry-run
-              testCount: 0,
-              componentCount: changesMatch ? parseInt(changesMatch[1]) : 0,
-              storybookUrl: null,
-              lastUpdated: new Date().toISOString(),
-              requiresReview: reviewStatus === 'PENDING_REVIEW',
-              source: 'cli-realtime'
-            };
-
-            console.log(`✅ Build #${buildInfo.buildNumber} obtenido del CLI`);
-
-            // Guardar en archivo para cache
-            saveBuildInfo(buildInfo);
-
-            resolve(buildInfo);
-          } else {
-            console.error('❌ No se pudo extraer información del CLI');
-            resolve(null);
-          }
-        } catch (parseError) {
-          console.error('❌ Error parseando output del CLI:', parseError.message);
-          resolve(null);
-        }
-      });
-    }).catch(err => {
-      console.error('❌ Error ejecutando CLI:', err.message);
-      resolve(null);
-    });
-  });
+    console.log(`✅ Build #${buildInfo.buildNumber} leído del cache local`);
+    return buildInfo;
+  } catch (error) {
+    console.error('❌ Error leyendo cache:', error.message);
+    return null;
+  }
 }
 
 /**
@@ -195,32 +150,21 @@ const server = createServer((req, res) => {
   else if (req.method === 'GET' && req.url.startsWith('/last-build')) {
     (async () => {
       try {
-        // Verificar si se pide forzar consulta a la API
-        const url = new URL(req.url, `http://localhost:${PORT}`);
-        const forceAPI = url.searchParams.get('force') === 'true';
+        // Siempre lee del cache local (no ejecuta CLI porque crea builds fantasma)
+        console.log('📂 Leyendo último build desde cache local...');
+        const buildData = getLastBuildFromCache();
 
-        let buildData = null;
-
-        // Si se fuerza API o no existe archivo local, consultar CLI en tiempo real
-        if (forceAPI || !existsSync(BUILD_FILE)) {
-          console.log(forceAPI ? '🔄 Forzando consulta en tiempo real...' : '📭 No hay datos locales, consultando CLI...');
-          buildData = await getLastBuildFromCLI();
-
-          if (!buildData) {
-            res.writeHead(500, {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*'
-            });
-            res.end(JSON.stringify({
-              success: false,
-              message: 'No se pudo obtener datos del CLI de Chromatic'
-            }));
-            return;
-          }
-        } else {
-          // Leer datos del archivo local
-          buildData = JSON.parse(readFileSync(BUILD_FILE, 'utf8'));
-          console.log(`📦 Datos del build #${buildData.buildNumber} servidos desde cache local`);
+        if (!buildData) {
+          res.writeHead(404, {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          });
+          res.end(JSON.stringify({
+            success: false,
+            message: 'No hay datos de build disponibles. Ejecuta "npm run chromatic:check" primero para generar el build.',
+            hint: 'O configura el webhook POST en Chromatic para recibir eventos automáticos'
+          }));
+          return;
         }
 
         res.writeHead(200, {
@@ -275,12 +219,12 @@ const server = createServer((req, res) => {
             <p><code>http://localhost:${PORT}/webhook</code></p>
           </div>
           <div class="success">
-            <p><strong>GET /last-build</strong> - Obtiene el último build (consulta en tiempo real)</p>
+            <p><strong>GET /last-build</strong> - Obtiene el último build desde cache local</p>
             <p><code>http://localhost:${PORT}/last-build</code></p>
             <ul>
-              <li>Por defecto: devuelve datos del cache local si existen</li>
-              <li>Si no hay cache: ejecuta Chromatic CLI en tiempo real</li>
-              <li><code>?force=true</code> - Siempre consulta en tiempo real (omite cache)</li>
+              <li>Lee los datos del archivo <code>.chromatic-last-build.json</code></li>
+              <li>Para actualizar: ejecuta <code>npm run chromatic:check</code></li>
+              <li>No crea builds nuevos en Chromatic (solo lectura)</li>
             </ul>
           </div>
           <div class="success">
@@ -291,7 +235,14 @@ const server = createServer((req, res) => {
           <h2>🔧 Modos de Operación</h2>
           <ol>
             <li><strong>Modo Push (Webhook):</strong> Chromatic envía eventos POST cuando hay builds nuevos</li>
-            <li><strong>Modo Pull (CLI):</strong> El servidor ejecuta Chromatic CLI en tiempo real para obtener el último build</li>
+            <li><strong>Modo Pull (Cache):</strong> El servidor lee del archivo local generado por <code>npm run chromatic:check</code></li>
+          </ol>
+
+          <h2>💡 Flujo de Trabajo Recomendado</h2>
+          <ol>
+            <li>Ejecuta <code>npm run chromatic:webhook</code> para iniciar este servidor</li>
+            <li>En otra terminal, ejecuta <code>npm run chromatic:check</code> para crear/actualizar un build</li>
+            <li>El endpoint /last-build servirá los datos del build desde el cache local</li>
           </ol>
 
           <h2>⚙️ Configuración en Chromatic (Opcional)</h2>
@@ -301,7 +252,7 @@ const server = createServer((req, res) => {
             <li>Agrega esta URL: <code>http://localhost:${PORT}/webhook</code></li>
             <li>Selecciona los eventos: Build Status Changed</li>
           </ol>
-          <p><em>Nota: El webhook funciona sin configurar esto, consultando la API directamente.</em></p>
+          <p><em>Nota: Esto permite recibir notificaciones automáticas cuando hay nuevos builds.</em></p>
           <p><em>Para producción, usa ngrok o expón este puerto públicamente.</em></p>
         </body>
       </html>
@@ -321,17 +272,16 @@ server.listen(PORT, () => {
   console.log(`\n✅ Servidor ejecutándose en: http://localhost:${PORT}`);
   console.log(`\n📡 Endpoints disponibles:`);
   console.log(`   POST /webhook         - Recibir eventos de Chromatic`);
-  console.log(`   GET  /last-build      - Obtener último build (consulta en tiempo real)`);
-  console.log(`   GET  /last-build?force=true - Forzar consulta en tiempo real`);
+  console.log(`   GET  /last-build      - Obtener último build (desde cache local)`);
   console.log(`   GET  /health          - Health check`);
   console.log(`   GET  /                - Documentación`);
   console.log('\n🔧 Modos de operación:');
   console.log(`   • Modo Push: Chromatic envía POST a /webhook`);
-  console.log(`   • Modo Pull: Ejecuta Chromatic CLI en tiempo real`);
+  console.log(`   • Modo Pull: Lee datos del archivo .chromatic-last-build.json`);
   console.log('\n💡 Uso recomendado:');
   console.log(`   1. Ejecuta este servidor: npm run chromatic:webhook`);
   console.log(`   2. En otra terminal: npm run chromatic:check`);
-  console.log(`   3. El endpoint /last-build ejecutará Chromatic CLI en tiempo real`);
+  console.log(`   3. El endpoint /last-build servirá los datos desde el cache`);
   console.log('\n📌 Configuración webhook (opcional):');
   console.log(`   https://www.chromatic.com/manage?appId=${PROJECT_ID}`);
   console.log('\n⏳ Servidor listo. Esperando peticiones...\n');
