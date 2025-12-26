@@ -1,0 +1,4 @@
+node_modules/
+.chromatic-build-data.json
+.env
+*.log
