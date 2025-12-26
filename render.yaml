@@ -2,8 +2,9 @@ services:
   - type: web
     name: essence-ui-webhook
     env: node
-    buildCommand: cd chromatic-webhook && npm install
-    startCommand: cd chromatic-webhook && npm start
+    root: chromatic-webhook
+    buildCommand: npm install
+    startCommand: npm start
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
